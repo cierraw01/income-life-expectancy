@@ -1,0 +1,96 @@
+---
+title: "Final Project"
+author: "Cierra Wickliff"
+date: "2023-12-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, out.width="95%")
+```
+
+# Load and subset 2020 Data
+
+```{r}
+## Use this chunk to load the data with read.csv()
+worldbank <- read.csv("wdidata20.csv", stringsAsFactors = T)
+worldbank2020 <- subset(worldbank, year==2019 & !is.na(SP.DYN.LE00.IN) & !is.na(income))
+nrow(worldbank2020)
+```
+
+
+There are 197 countries that have life expectancy data from the year 2019.
+
+# Number in Each Income Group
+
+```{r}
+## table
+table(worldbank2020$income)
+```
+
+There are 65 High income, 30 low income, 47 lower middle income, and 55 upper middle income countries.
+
+
+# Histogram of Life Expectancies
+
+```{r}
+## histogram
+mean(worldbank2020$SP.DYN.LE00.IN)
+median(worldbank2020$SP.DYN.LE00.IN)
+hist(x=worldbank2020$SP.DYN.LE00.IN, 
+     breaks=50,
+     main = "Life Expectancy in Years")
+
+```
+
+The mean life expectancy is 72.93 years. The median is 74.24 years.
+  
+
+# Calculating the average life expectancy across income groups
+
+```{r}
+## tapply and barplot
+incomeLife <- tapply(worldbank2020$SP.DYN.LE00.IN, worldbank2020$income, mean)
+incomeLife
+barplot(incomeLife,
+        col=c("forestgreen", "red4", "orange2", "gold1"),
+        border=NA,
+        main="Life Expectancy by Income Group",
+        ylab="Life Expectancy in Years")
+```
+Low income countries have a life expectancy of 62.82 years. Lower middle income countries have a life expectancy of 68.30 years. Upper middle income countries have a life expectancy of 73.91 years. High income countries have a life expectancy of 80.12 years.
+
+
+# Quantify Income Groups
+
+```{r}
+## quantify data
+worldbank2020$incomeNum <- NA
+worldbank2020$incomeNum[worldbank2020$income=="Low income"] <- 1
+worldbank2020$incomeNum[worldbank2020$income=="Lower middle income"] <- 2
+worldbank2020$incomeNum[worldbank2020$income=="Upper middle income"] <- 3
+worldbank2020$incomeNum[worldbank2020$income=="High income"] <- 4
+```
+
+I quantify the income groups from
+  Low income: 1
+  Lower middle income: 2
+  Upper middle income: 3
+  High income: 4
+
+
+# Quantify Income Groups
+
+```{r}
+plot(x=worldbank2020$incomeNum, y=worldbank2020$SP.DYN.LE00.IN,
+     main="Life Expectancy by Income Group",
+     ylab="Income Group",
+     xlab="Life Expectancy in Years")
+```
+
+
+
+
+
+
+
